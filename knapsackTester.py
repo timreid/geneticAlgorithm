@@ -5,6 +5,52 @@ the knapsack problem is to choose from a list of items, each with associated val
 import numpy
 from geneticAlgorithm import *
 
+def makeKnapsackMonitor(outputFilename, knapsackProblem):
+	"""
+	returns a basic monitor which logs the generation number, the elite's fitness, and the elite's pretty printed genome. it sets the state to False when either a maximum number of generations or a sufficiently high elite fitness is reached.
+	Args:
+		outputFilename: the name given to the log file.
+		genomeWriter: the genome pretty printer.
+	"""
+	def knapsackGenomeWriter(genome):
+		"""
+		pretty prints a knapsack genome
+		"""
+		output = ""
+		for codon in genome:
+			if codon: output += "1"
+			else: output += "0"
+		return output
+
+	def calculateWeight(genome):
+		weight = 0.0
+		for i in range(len(genome)):
+			weight += genome[i] * knapsackProblem[i][0]
+		return weight
+
+	log = open(outputFilename, "w")
+	def monitor(state, population):
+		state["elite"] = population[0]
+		state["generation"] += 1
+		generation = state.get("generation")
+		elite = state.get("elite")
+		log.write(str(generation))
+		log.write("\t")
+		log.write(str(elite.fitness))
+		log.write("\t")
+		log.write(str(calculateWeight(elite.genome)))
+		log.write("\t")
+		log.write(knapsackGenomeWriter(elite.genome))
+		log.write("\n")
+		log.flush()
+		maxGenerations = state.get("maxGenerations")
+		goalFitness = state.get("goalFitness")
+		#check if a goal condition has been met
+		if (maxGenerations and generation >= maxGenerations) or (goalFitness and elite.fitness >= goalFitness):
+			log.close()
+			state = False
+	return monitor
+
 def makeKnapsackGenome(knapsackProblemSize):
 	"""
 	makes a random knapsack genome
@@ -18,15 +64,7 @@ def makeKnapsackGenome(knapsackProblemSize):
 	return genome
 
 
-def knapsackGenomeWriter(genome):
-	"""
-	pretty prints a knapsack genome
-	"""
-	output = ""
-	for codon in genome:
-		if codon: output += "1"
-		else: output += "0"
-	return output
+
 
 def makeKnapsackProblem(nItems, weightSigma, valueSigma):
 	"""
@@ -59,11 +97,11 @@ def makeKnapsackFitness(knapsackProblem, maxWeight):
 	return knapsackFitness
 
 #construct a random knapsack problem
-knapsackProblemSize = 1000
-knapsackProblem = makeKnapsackProblem(knapsackProblemSize, 10.0, 100.0)
-
-maxWeight = 100
-monitor = makeSimpleMonitor("output", knapsackGenomeWriter)
+knapsackProblemSize = 10000
+knapsackProblem = makeKnapsackProblem(knapsackProblemSize, 100.0, 100.0)
+print(knapsackProblem)
+maxWeight = 1000
+monitor = makeKnapsackMonitor("output", knapsackProblem)
 fitness = makeKnapsackFitness(knapsackProblem, maxWeight)
 initialState = {"mutationRate":0.05}
 

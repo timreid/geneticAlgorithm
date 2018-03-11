@@ -22,7 +22,7 @@ def geneticAlgorithm(monitor, select, fitness, crossover, mutation, initialState
 		initialPopulation: is the starting population of the run.
 	"""
 
-	if not initialState["generation"]: initialState["generation"] = 0
+	if not "generation" in initialState: initialState["generation"] = 0
 	state = initialState
 	population = initialPopulation
 
