@@ -1,2 +1,5 @@
 .vscode
 *.code-workspace
+output
+__pycache__/geneticAlgorithm.cpython-36.pyc
+.gitignore
