@@ -2,6 +2,3 @@
 *.code-workspace
 output
 __pycache__/geneticAlgorithm.cpython-36.pyc
-.gitignore
-__pycache__/genetic_algorithm.cpython-36.pyc
-.gitignore

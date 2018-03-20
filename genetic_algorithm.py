@@ -43,7 +43,7 @@ def genetic_algorithm(monitor, select, fitness, crossover, mutation, initial_sta
             mom = select(state, population)
             dad = select(state, population)
             child_genome = crossover(state, mom.genome, dad.genome)
-            mutation(state, child_genome)
+            child_genome = mutation(state, child_genome)
             child_fitness = fitness(state, child_genome)
             child = Individual(child_fitness, child_genome)
             new_population.append(child)
@@ -52,7 +52,7 @@ def genetic_algorithm(monitor, select, fitness, crossover, mutation, initial_sta
         population = new_population
         #monitor will perform any desired logging and set the state to False to indicate
         #when a goal condition is reached.
-        monitor(state, population)
+        state = monitor(state, population)
 
 def make_simple_monitor(output_filename, genome_writer):
     """
@@ -86,6 +86,7 @@ def make_simple_monitor(output_filename, genome_writer):
             log.close()
             #setting state to False signifies the end of the run
             state = False
+        return state
     return monitor
 
 
