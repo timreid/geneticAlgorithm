@@ -24,17 +24,6 @@ def make_knapsack_monitor(output_filename, knapsack_problem):
         output_filename: the name given to the log file.
         knapsack_problem: the instance of the knapsack problem.
     """
-    def knapsack_genome_writer(genome):
-        """
-        pretty prints a knapsack genome
-        """
-        output = ""
-        for codon in genome:
-            if codon:
-                output += "1"
-            else:
-                output += "0"
-        return output
 
     def calculate_weight(genome):
         """
@@ -60,7 +49,7 @@ def make_knapsack_monitor(output_filename, knapsack_problem):
         log.write("\t")
         log.write(str(calculate_weight(elite.genome)))
         log.write("\t")
-        log.write(knapsack_genome_writer(elite.genome))
+        log.write("".join('1' if codon else '0' for codon in elite.genome))
         log.write("\n")
         log.flush()
         max_generations = state.get("max_generations")
